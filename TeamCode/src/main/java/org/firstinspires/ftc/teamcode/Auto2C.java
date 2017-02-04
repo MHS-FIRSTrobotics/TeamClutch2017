@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.ftccommunity.ftcxtensible.robot.ExtensibleGamepad;
 import org.ftccommunity.ftcxtensible.util.JoystickQuestions;
 
+import java.util.Objects;
+
 @Autonomous
 public class Auto2C extends LinearOpMode {
     static final String RED = "RED";
@@ -17,8 +19,8 @@ public class Auto2C extends LinearOpMode {
     String color;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-
+    public void runOpMode() {
+        sleep(80);
         ClutchHardware hardware = new ClutchHardware(gamepad1, hardwareMap);
         hardware.driveTrain.configureDriveSystem(DriveTrain.DriveSystems.HOLONOMIC);
         ExtensibleGamepad xGamepad1 = new ExtensibleGamepad(gamepad1);
@@ -32,6 +34,7 @@ public class Auto2C extends LinearOpMode {
         waitForStart();
         questions.stop();
         color = questions.responseTo("FOO") == null ? "RED" : questions.responseTo("FOO");
+        telemetry.addData("COLOR", color).setRetained(true);
         ElapsedTime time = new ElapsedTime();
         while (opModeIsActive()) {
             double rawLightDetected = hardware.opticalDistanceSensor.getRawLightDetected();
@@ -41,32 +44,37 @@ public class Auto2C extends LinearOpMode {
             if (rawLightDetected > .5) {
                 break;
             }
-            if (time.seconds() > 5) {
+            if (time.seconds() > 7)
                 hardware.driveTrain.updateTarget(0, 0, 0);
-            } else if (time.seconds() > 2.5)
-                hardware.driveTrain.updateTarget(0, .18, 0);
-            else if (time.seconds() > 2)
-                hardware.driveTrain.updateTarget(0, .5, 0);
-            else if (time.seconds() > 1)
-                hardware.driveTrain.updateTarget(0, .7, 0);
+            else if (time.seconds() > 3)
+                hardware.driveTrain.updateTarget(0, .2, 0);
+            else if (time.seconds() > 2.25)
+                hardware.driveTrain.updateTarget(0, .4, 0);
+            else if (time.seconds() > 1.5)
+                hardware.driveTrain.updateTarget(0, .6, 0);
             else
                 hardware.driveTrain.updateTarget(0, 1, 0);
         }
         telemetry.addData("STAGE", 2).setRetained(true);
+        telemetry.update();
         while (opModeIsActive()) {
             double rawLightDetected = hardware.opticalDistanceSensor.getRawLightDetected();
             telemetry.addData("ODS_DATA", rawLightDetected);
             telemetry.update();
 
             if (hardware.distanceSensor.getDistance(DistanceUnit.CM) < 8) {
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
+                sleep(500);
+                hardware.driveTrain.updateTarget(0, 0, 0);
                 break;
             }
-            if (rawLightDetected > .6) {
-                hardware.driveTrain.updateTarget(0, .2, 0);
+            if (rawLightDetected > .45) {
+                hardware.driveTrain.updateTarget(0, .7, 0);
             } else {
-                hardware.driveTrain.updateTarget(0, 0, -.5);
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
             }
         }
+        telemetry.addData("STAGE", 3).setRetained(true);
         telemetry.update();
         time = new ElapsedTime();
         while (opModeIsActive()) {
@@ -74,18 +82,78 @@ public class Auto2C extends LinearOpMode {
             if (time.seconds() < 2) {
                 if (hardware.colorSensor.red() > hardware.colorSensor.blue()) {
                     if (color == RED) {
-                        hardware.pressed.setPosition(.3);
-                    } else {
-                        hardware.pressed.setPosition(.7);
+                        driveLeftForBeacon(hardware);
+                        sleep(500);
                     }
+                    driveForwardForBeacon(hardware);
                 } else {
-                    if (color == RED) {
-                        hardware.pressed.setPosition(.7);
-                    } else {
-                        hardware.pressed.setPosition(.3);
+                    if (color == BLUE) {
+                        driveLeftForBeacon(hardware);
+                        sleep(500);
                     }
+                    driveForwardForBeacon(hardware);
                 }
             } else {
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
+                sleep(500);
+                hardware.driveTrain.updateTarget(0, -.5, 0);
+                sleep(900);
+                hardware.driveTrain.updateTarget(0, 0, 0);
+                break;
+            }
+        }
+        while (opModeIsActive()) {
+            hardware.driveTrain.updateTarget(.2, 0, 0);
+            if (time.seconds() > 4) {
+                if (hardware.opticalDistanceSensor.getRawLightDetected() > .6) {
+                    break;
+                }
+            }
+        }
+        telemetry.addData("STAGE", 2).setRetained(true);
+        telemetry.update();
+        while (opModeIsActive()) {
+            double rawLightDetected = hardware.opticalDistanceSensor.getRawLightDetected();
+            telemetry.addData("ODS_DATA", rawLightDetected);
+            telemetry.update();
+
+            if (hardware.distanceSensor.getDistance(DistanceUnit.CM) < 8) {
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
+                sleep(500);
+                hardware.driveTrain.updateTarget(0, 0, 0);
+                break;
+            }
+            if (rawLightDetected > .45) {
+                hardware.driveTrain.updateTarget(0, .7, 0);
+            } else {
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
+            }
+        }
+        telemetry.addData("STAGE", 3).setRetained(true);
+        telemetry.update();
+        time = new ElapsedTime();
+        while (opModeIsActive()) {
+            // left is red
+            if (time.seconds() < 2) {
+                if (hardware.colorSensor.red() > hardware.colorSensor.blue()) {
+                    if (color == RED) {
+                        driveLeftForBeacon(hardware);
+                        sleep(500);
+                    }
+                    driveForwardForBeacon(hardware);
+                } else {
+                    if (color == BLUE) {
+                        driveLeftForBeacon(hardware);
+                        sleep(500);
+                    }
+                    driveForwardForBeacon(hardware);
+                }
+            } else {
+                hardware.driveTrain.updateTarget(0, 0, .05 * (color.equals(RED) ? -1 : 1));
+                sleep(500);
+                hardware.driveTrain.updateTarget(0, -.5, 0);
+                sleep(900);
+                hardware.driveTrain.updateTarget(0, 0, 0);
                 break;
             }
         }
@@ -98,5 +166,15 @@ public class Auto2C extends LinearOpMode {
             }
         }
         hardware.driveTrain.updateTarget(0, 0, 0);
+    }
+
+    private void driveForwardForBeacon(ClutchHardware hardware) {
+        hardware.driveTrain.updateTarget(0, 1, 0);
+        sleep(2500);
+    }
+
+    private void driveLeftForBeacon(ClutchHardware hardware) {
+        hardware.driveTrain.updateTarget(.7 * (color.equals(RED) ? -1 : 1), 0, 0);
+        sleep(1500);
     }
 }

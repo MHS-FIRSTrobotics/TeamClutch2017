@@ -37,10 +37,10 @@ public class DriveTrain {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         this.controlGamepad = controlGamepad;
         //this.drive = drive;
@@ -178,14 +178,18 @@ public class DriveTrain {
             public void drive(double x, double y, double rotPower) {
                 //double transLength = Math.hypot(x, y);
                 PolarCoordinates adjTemp = new PolarCoordinates(new CartesianCoordinates(x, y));
-                adjTemp = new PolarCoordinates(adjTemp.getR(), adjTemp.getTheta() - 0.94719);
+                //adjTemp = new PolarCoordinates(adjTemp.getR(), adjTemp.getTheta() - 0.94719);
                 CartesianCoordinates temp = new CartesianCoordinates(adjTemp);
                 double adjY = temp.getY();
                 double adjX = temp.getX();
-                double frontLeft = adjY + adjX + rotPower;
-                double frontRight = adjY - adjX - rotPower;
-                double backRight = adjY + adjX - rotPower;
-                double backLeft = adjY - adjX + rotPower;
+                //double frontLeft = adjY + adjX + rotPower;
+                //double frontRight = adjY - adjX - rotPower;
+                //double backRight = adjY + adjX - rotPower;
+                //double backLeft = adjY - adjX + rotPower;
+                double frontLeft = adjX + rotPower;
+                double frontRight = adjY - rotPower;
+                double backLeft = adjX - rotPower;
+                double backRight = adjY + rotPower;
 
                 frontLeft = Range.clip(frontLeft, -1, 1);
                 frontRight = Range.clip(frontRight, -1, 1);

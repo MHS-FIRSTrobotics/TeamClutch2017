@@ -89,7 +89,7 @@ public class Drive3 extends SimpleOpMode {
             winch.setPower(.1);
             //else winch.setTargetPosition(winch.getCurrentPosition() + 50);
         } else {
-            winch.setPower(-0.03);
+            winch.setPower(0.0);
         }
 
 //        if (gamepad1.isLeftBumperPressed()) {
