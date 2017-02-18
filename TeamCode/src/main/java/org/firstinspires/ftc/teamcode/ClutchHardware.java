@@ -24,9 +24,9 @@ class ClutchHardware {
     final OpticalDistanceSensor opticalDistanceSensor;
     final ModernRoboticsI2cRangeSensor distanceSensor;
     final ColorSensor colorSensor;
-    final DcMotor winch;
-    final Servo pressed;
-    final Servo ballLift;
+//    final DcMotor winch;
+//    final Servo pressed;
+//    final DcMotor ballLift;
     //private final DeviceInterfaceModule dim;
     //private final Servo colorServo;
 
@@ -39,9 +39,9 @@ class ClutchHardware {
         distanceSensor = ctx.legacyHardwareMap().get(ModernRoboticsI2cRangeSensor.class, "ultrasonic");
         //colorServo = hardwareMap.servos().get("colorServo");
         colorSensor = hardwareMap.colorSensors().get("colorSensor");
-        winch = hardwareMap.get("winch");
-        pressed = hardwareMap.get("buttonPresser");
-        ballLift = hardwareMap.get("ballLift");
+//        winch = hardwareMap.get("winch");
+//        pressed = hardwareMap.get("buttonPresser");
+//        ballLift = hardwareMap.get("ballLift");
     }
 
     ClutchHardware(Gamepad gamepad1, HardwareMap map) {
@@ -54,9 +54,9 @@ class ClutchHardware {
         //colorServo = hardwareMap.servos().get("colorServo");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
         //  dim = hardwareMap.deviceInterfaceModule.get("dim");
-        winch = (DcMotor) hardwareMap.get("winch");
-        pressed = (Servo) hardwareMap.get("buttonPresser");
-        ballLift = (Servo) hardwareMap.get("ballLift");
+        //winch = (DcMotor) hardwareMap.get("winch");
+        //pressed = (Servo) hardwareMap.get("buttonPresser");
+        //ballLift = (DcMotor) hardwareMap.get("ballLift");
         //distanceSensor = hardwareMap.ultrasonicSensors().get("ultrasonic");
         ((ModernRoboticsI2cRangeSensor) distanceSensor).read8(ModernRoboticsI2cRangeSensor.Register.FIRMWARE_REV);
         //colorServo = hardwareMap.servos().get("colorServo");
@@ -64,15 +64,15 @@ class ClutchHardware {
         //        hardwareMap.deviceInterfaceModules().get("dim"), 1, false);
     }
 
-    final void pressLeftBeacon() {
-        pressed.setPosition(SERVO_POSITION_LEFT);
-    }
+//    final void pressLeftBeacon() {
+//        pressed.setPosition(SERVO_POSITION_LEFT);
+//    }
 
-    final void pressRightBeacon() {
-        pressed.setPosition(SERVO_POSITION_RIGHT);
-    }
-
-    void pressNietherBeaconButton() {
-        pressed.setPosition(SERVO_POSITION_NEUTRAL);
-    }
+//    final void pressRightBeacon() {
+//        pressed.setPosition(SERVO_POSITION_RIGHT);
+//    }
+//
+//    void pressNietherBeaconButton() {
+//        pressed.setPosition(SERVO_POSITION_NEUTRAL);
+//    }
 }

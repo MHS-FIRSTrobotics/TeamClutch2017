@@ -37,7 +37,7 @@ public class Drive2 extends SimpleOpMode {
             telemetry.data("ODS_READ", hardware.opticalDistanceSensor == null ? "No Sensor " : hardware.opticalDistanceSensor.getRawLightDetected());
             telemetry.data("DIS_READ", hardware.distanceSensor == null ? "No Sensor" : hardware.distanceSensor.getDistance(DistanceUnit.CM));
             telemetry.data("COLOR", hardware.colorSensor == null ? "No Sensor" : (hardware.colorSensor.red() > hardware.colorSensor.blue() ? "Red" : "Blue"));
-            telemetry.data("MOTOR_LOCK", hardware.winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER ? "unlock" : "lock");
+            // telemetry.data("MOTOR_LOCK", hardware.winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER ? "unlock" : "lock");
 
             DriveTrain driveTrain = hardware.driveTrain;
             telemetry.data("THETA", driveTrain.getThetaInDegrees());
@@ -57,7 +57,8 @@ public class Drive2 extends SimpleOpMode {
             ballLiftPos %= 100;
         }
         ballLiftTriggerPressed = gamepad1.isXPressed() || gamepad1.isYPressed();
-        hardware.ballLift.setPosition(ballLiftPos / 100d);
+        //
+        // hardware.ballLift.setPosition(ballLiftPos / 100d);
         telemetry.addData("BALL_LIFT_POS", ballLiftPos);
     }
 
@@ -73,37 +74,37 @@ public class Drive2 extends SimpleOpMode {
             //buttonPresserPos %= 100;
         }
 
-        buttonPresserTriggerPressed = gamepad1.isAPressed() || gamepad1.isBPressed();
-        hardware.pressed.setPosition(buttonPresserPos);
+        //buttonPresserTriggerPressed = gamepad1.isAPressed() || gamepad1.isBPressed();
+        //hardware.pressed.setPosition(buttonPresserPos);
         telemetry.addData("PRESSED_POS", buttonPresserPos);
     }
 
     private void winchControl() {
-        DcMotor winch = hardware.winch;
-        if (gamepad1.dpad.isUpPressed()) {
-            //if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
-            winch.setPower(-1);
-            //winch.setTargetPosition(winch.getCurrentPosition() - 50);
-        } else if (gamepad1.dpad.isDownPressed()) {
-            //if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
-            winch.setPower(.1);
-            //else winch.setTargetPosition(winch.getCurrentPosition() + 50);
-        } else {
-            winch.setPower(-0.03);
-        }
-
-//        if (gamepad1.isLeftBumperPressed()) {
-//            if (winch.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
-//                winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                winch.setPower(0.02);
-//            }
-//
-//            if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-//                int currPosition = winch.getCurrentPosition();
-//                winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                winch.setTargetPosition(currPosition);
-//                winch.setPower(-0.03);
-//            }
+//        DcMotor winch = hardware.winch;
+//        if (gamepad1.dpad.isUpPressed()) {
+//            //if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
+//            winch.setPower(-1);
+//            //winch.setTargetPosition(winch.getCurrentPosition() - 50);
+//        } else if (gamepad1.dpad.isDownPressed()) {
+//            //if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
+//            winch.setPower(.1);
+//            //else winch.setTargetPosition(winch.getCurrentPosition() + 50);
+//        } else {
+//            winch.setPower(-0.03);
 //        }
+//
+////        if (gamepad1.isLeftBumperPressed()) {
+////            if (winch.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+////                winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+////                winch.setPower(0.02);
+////            }
+////
+////            if (winch.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+////                int currPosition = winch.getCurrentPosition();
+////                winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+////                winch.setTargetPosition(currPosition);
+////                winch.setPower(-0.03);
+////            }
+////        }
     }
 }
